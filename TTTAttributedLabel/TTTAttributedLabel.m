@@ -59,7 +59,7 @@ static inline NSDictionary * NSAttributedStringAttributesFromLabel(TTTAttributed
     NSMutableDictionary *mutableAttributes = [NSMutableDictionary dictionary]; 
 
     if ([NSMutableParagraphStyle class]) {
-        [mutableAttributes setObject:label.font forKey:(NSString *)kCTFontAttributeName];
+        [mutableAttributes setObject:label.font forKey:(NSString *)NSFontAttributeName];
         [mutableAttributes setObject:label.textColor forKey:(NSString *)kCTForegroundColorAttributeName];
 
         NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
@@ -79,51 +79,8 @@ static inline NSDictionary * NSAttributedStringAttributesFromLabel(TTTAttributed
         } else {
             paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
         }
-
-        // [mutableAttributes setObject:paragraphStyle forKey:(NSString *)kCTParagraphStyleAttributeName];
-    } else {
-        CTFontRef font = CTFontCreateWithName((__bridge CFStringRef)label.font.fontName, label.font.pointSize, NULL);
-        [mutableAttributes setObject:(__bridge id)font forKey:(NSString *)kCTFontAttributeName];
-        CFRelease(font);
-
-        [mutableAttributes setObject:(id)[label.textColor CGColor] forKey:(NSString *)kCTForegroundColorAttributeName];
-
-        CTTextAlignment alignment = CTTextAlignmentFromUITextAlignment(label.textAlignment);
-        CGFloat lineSpacing = label.leading;
-        CGFloat lineSpacingAdjustment = ceilf(label.font.lineHeight - label.font.ascender + label.font.descender);
-        CGFloat lineHeightMultiple = label.lineHeightMultiple;
-        CGFloat topMargin = label.textInsets.top;
-        CGFloat bottomMargin = label.textInsets.bottom;
-        CGFloat leftMargin = label.textInsets.left;
-        CGFloat rightMargin = -label.textInsets.right;
-        CGFloat firstLineIndent = label.firstLineIndent + leftMargin;
-
-        CTLineBreakMode lineBreakMode;
-        if (label.numberOfLines != 1) {
-            lineBreakMode = CTLineBreakModeFromUILineBreakMode(UILineBreakModeWordWrap);
-        } else {
-            lineBreakMode = CTLineBreakModeFromUILineBreakMode(label.lineBreakMode);
-        }
-
-        CTParagraphStyleSetting paragraphStyles[10] = {
-            {.spec = kCTParagraphStyleSpecifierAlignment, .valueSize = sizeof(CTTextAlignment), .value = (const void *)&alignment},
-            {.spec = kCTParagraphStyleSpecifierLineBreakMode, .valueSize = sizeof(CTLineBreakMode), .value = (const void *)&lineBreakMode},
-            {.spec = kCTParagraphStyleSpecifierLineSpacing, .valueSize = sizeof(CGFloat), .value = (const void *)&lineSpacing},
-            {.spec = kCTParagraphStyleSpecifierLineSpacingAdjustment, .valueSize = sizeof (CGFloat), .value = (const void *)&lineSpacingAdjustment},
-            {.spec = kCTParagraphStyleSpecifierLineHeightMultiple, .valueSize = sizeof(CGFloat), .value = (const void *)&lineHeightMultiple},
-            {.spec = kCTParagraphStyleSpecifierFirstLineHeadIndent, .valueSize = sizeof(CGFloat), .value = (const void *)&firstLineIndent},
-            {.spec = kCTParagraphStyleSpecifierParagraphSpacingBefore, .valueSize = sizeof(CGFloat), .value = (const void *)&topMargin},
-            {.spec = kCTParagraphStyleSpecifierParagraphSpacing, .valueSize = sizeof(CGFloat), .value = (const void *)&bottomMargin},
-            {.spec = kCTParagraphStyleSpecifierHeadIndent, .valueSize = sizeof(CGFloat), .value = (const void *)&leftMargin},
-            {.spec = kCTParagraphStyleSpecifierTailIndent, .valueSize = sizeof(CGFloat), .value = (const void *)&rightMargin}
-        };
-
-        CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(paragraphStyles, 10);
-        
-        [mutableAttributes setObject:(__bridge id)paragraphStyle forKey:(NSString *)kCTParagraphStyleAttributeName];
-        
-        CFRelease(paragraphStyle);
-    }
+        [mutableAttributes setObject:paragraphStyle forKey:(NSString *)NSParagraphStyleAttributeName];
+    } 
     
     return [NSDictionary dictionaryWithDictionary:mutableAttributes];
 }
@@ -262,25 +219,10 @@ static inline NSAttributedString * NSAttributedStringBySettingColorFromContext(N
         
         [mutableLinkAttributes setObject:paragraphStyle forKey:(NSString *)kCTParagraphStyleAttributeName];
         [mutableActiveLinkAttributes setObject:paragraphStyle forKey:(NSString *)kCTParagraphStyleAttributeName];
-    } else {
-        [mutableLinkAttributes setObject:(__bridge id)[[UIColor blueColor] CGColor] forKey:(NSString *)kCTForegroundColorAttributeName];
-        [mutableActiveLinkAttributes setObject:(__bridge id)[[UIColor redColor] CGColor] forKey:(NSString *)kCTForegroundColorAttributeName];
-
-        CTLineBreakMode lineBreakMode = CTLineBreakModeFromUILineBreakMode(UILineBreakModeWordWrap);
-        CTParagraphStyleSetting paragraphStyles[1] = {
-            {.spec = kCTParagraphStyleSpecifierLineBreakMode, .valueSize = sizeof(CTLineBreakMode), .value = (const void *)&lineBreakMode}
-        };
-        CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(paragraphStyles, 1);
-        
-        [mutableLinkAttributes setObject:(__bridge id)paragraphStyle forKey:(NSString *)kCTParagraphStyleAttributeName];
-        [mutableActiveLinkAttributes setObject:(__bridge id)paragraphStyle forKey:(NSString *)kCTParagraphStyleAttributeName];
-        
-        CFRelease(paragraphStyle);
     }
 	    
     self.linkAttributes = [NSDictionary dictionaryWithDictionary:mutableLinkAttributes];
     self.activeLinkAttributes = [NSDictionary dictionaryWithDictionary:mutableActiveLinkAttributes];
-    
 }
 
 - (void)dealloc {
