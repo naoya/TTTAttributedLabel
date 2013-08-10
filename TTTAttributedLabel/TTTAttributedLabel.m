@@ -71,6 +71,8 @@ static inline NSDictionary * NSAttributedStringAttributesFromLabel(TTTAttributed
         paragraphStyle.paragraphSpacing = label.textInsets.bottom;
         paragraphStyle.headIndent = label.textInsets.left;
         paragraphStyle.tailIndent = -label.textInsets.right;
+        paragraphStyle.minimumLineHeight = label.minimumLineHeight;
+        paragraphStyle.maximumLineHeight = label.maximumLineHeight;
 
         if (label.numberOfLines == 1) {
             paragraphStyle.lineBreakMode = label.lineBreakMode;
@@ -218,6 +220,8 @@ static inline NSAttributedString * NSAttributedStringBySettingColorFromContext(N
 @synthesize highlightedShadowColor = _highlightedShadowColor;
 @synthesize leading = _leading;
 @synthesize lineHeightMultiple = _lineHeightMultiple;
+@synthesize minimumLineHeight = _minimumLineHeight;
+@synthesize maximumLineHeight = _maximumLineHeight;
 @synthesize firstLineIndent = _firstLineIndent;
 @synthesize textInsets = _textInsets;
 @synthesize verticalAlignment = _verticalAlignment;

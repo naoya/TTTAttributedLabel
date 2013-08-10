@@ -169,6 +169,8 @@ extern NSString * const kTTTBackgroundCornerRadiusAttributeName;
  The line height multiple. This value is 1.0 by default.
  */
 @property (nonatomic, assign) CGFloat lineHeightMultiple;
+@property (nonatomic, assign) CGFloat minimumLineHeight;
+@property (nonatomic, assign) CGFloat maximumLineHeight;
 
 /**
  The distance, in points, from the margin to the text container. This value is `UIEdgeInsetsZero` by default.
