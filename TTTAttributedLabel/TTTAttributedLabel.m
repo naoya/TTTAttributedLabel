@@ -80,7 +80,7 @@ static inline NSDictionary * NSAttributedStringAttributesFromLabel(TTTAttributed
             paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
         }
 
-        [mutableAttributes setObject:paragraphStyle forKey:(NSString *)kCTParagraphStyleAttributeName];
+        // [mutableAttributes setObject:paragraphStyle forKey:(NSString *)kCTParagraphStyleAttributeName];
     } else {
         CTFontRef font = CTFontCreateWithName((__bridge CFStringRef)label.font.fontName, label.font.pointSize, NULL);
         [mutableAttributes setObject:(__bridge id)font forKey:(NSString *)kCTFontAttributeName];
